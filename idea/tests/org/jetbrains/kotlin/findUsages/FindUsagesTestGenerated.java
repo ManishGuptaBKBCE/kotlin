@@ -644,6 +644,11 @@ public class FindUsagesTestGenerated extends AbstractFindUsagesTest {
                 runTest("idea/testData/findUsages/kotlin/findFunctionUsages/kotlinLocalMethodUsages2.0.kt");
             }
 
+            @TestMetadata("kotlinMethodAliasedUsages.0.kt")
+            public void testKotlinMethodAliasedUsages() throws Exception {
+                runTest("idea/testData/findUsages/kotlin/findFunctionUsages/kotlinMethodAliasedUsages.0.kt");
+            }
+
             @TestMetadata("kotlinMethodUsages.0.kt")
             public void testKotlinMethodUsages() throws Exception {
                 runTest("idea/testData/findUsages/kotlin/findFunctionUsages/kotlinMethodUsages.0.kt");

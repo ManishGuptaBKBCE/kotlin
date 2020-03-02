@@ -60,10 +60,14 @@ class KotlinFindUsagesHandlerFactory(project: Project) : FindUsagesHandlerFactor
     override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler {
         when (element) {
             is KtImportAlias -> {
-                val ktClassOrObject =
-                    element.importDirective?.importedReference?.getQualifiedElementSelector()?.mainReference?.resolve() as? KtClassOrObject
-                        ?: return NULL_HANDLER
-                return KotlinFindClassUsagesHandler(ktClassOrObject, this)
+                return when (val resolvedElement =
+                    element.importDirective?.importedReference?.getQualifiedElementSelector()?.mainReference?.resolve()) {
+                    is KtClassOrObject, is KtNamedFunction, is KtProperty, is KtConstructor<*> -> createFindUsagesHandler(
+                        resolvedElement,
+                        forHighlightUsages
+                    )
+                    else -> NULL_HANDLER
+                }
             }
 
             is KtClassOrObject ->
@@ -118,10 +122,10 @@ class KotlinFindUsagesHandlerFactory(project: Project) : FindUsagesHandlerFactor
 
     private fun handlerForMultiple(originalDeclaration: KtNamedDeclaration, declarations: Collection<PsiElement>): FindUsagesHandler {
         return when (declarations.size) {
-            0 -> FindUsagesHandler.NULL_HANDLER
+            0 -> NULL_HANDLER
 
             1 -> {
-                val target = declarations.single().unwrapped ?: return FindUsagesHandler.NULL_HANDLER
+                val target = declarations.single().unwrapped ?: return NULL_HANDLER
                 if (target is KtNamedDeclaration) {
                     KotlinFindMemberUsagesHandler.getInstance(target, factory = this)
                 } else {
