@@ -17,10 +17,9 @@ fun addVfsListener(watcher: GradleScriptInputsWatcher) {
             override fun after(events: List<VFileEvent>) {
                 ApplicationManager.getApplication().executeOnPooledThread {
                     if (watcher.project.isDisposed) return@executeOnPooledThread
-                    val files = getAffectedGradleProjectFiles(watcher.project)
                     for (event in events) {
                         val file = event.file ?: return@executeOnPooledThread
-                        if (isInAffectedGradleProjectFiles(files, event.path)) {
+                        if (isInAffectedGradleProjectFiles(event.path)) {
                             watcher.fileChanged(event.path, file.timeStamp)
                         }
                     }

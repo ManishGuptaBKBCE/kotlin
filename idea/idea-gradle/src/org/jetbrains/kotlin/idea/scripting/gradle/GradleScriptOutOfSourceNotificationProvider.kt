@@ -22,7 +22,7 @@ class GradleScriptOutOfSourceNotificationProvider(private val project: Project) 
         if (!isGradleKotlinScript(file)) return null
         if (file.fileType != KotlinFileType.INSTANCE) return null
 
-        if (isInAffectedGradleProjectFiles(project, file.path)) return null
+        if (isInAffectedGradleProjectFiles(file.path)) return null
 
         return EditorNotificationPanel().apply {
             text("The associated Gradle Project isn't imported.")

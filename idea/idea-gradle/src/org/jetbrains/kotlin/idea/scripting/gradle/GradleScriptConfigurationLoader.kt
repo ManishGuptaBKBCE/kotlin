@@ -64,7 +64,7 @@ class GradleScriptConfigurationLoader(project: Project) : DefaultScriptConfigura
             return true
         }
 
-        if (!isInAffectedGradleProjectFiles(ktFile.project, vFile.path)) {
+        if (!isInAffectedGradleProjectFiles(vFile.path)) {
             ScriptConfigurationManager.markFileWithManualConfigurationLoading(vFile)
             return true
         }

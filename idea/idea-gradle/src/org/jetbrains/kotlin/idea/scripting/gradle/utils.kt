@@ -6,56 +6,34 @@
 package org.jetbrains.kotlin.idea.scripting.gradle
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.util.io.systemIndependentPath
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.idea.util.application.runReadAction
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtScriptInitializer
 import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
-import org.jetbrains.plugins.gradle.GradleManager
-import org.jetbrains.plugins.gradle.settings.GradleProjectSettings
-import org.jetbrains.plugins.gradle.util.GradleConstants
 
 private val sections = arrayListOf("buildscript", "plugins", "initscript", "pluginManagement")
 
 fun isGradleKotlinScript(virtualFile: VirtualFile) = virtualFile.name.endsWith(".gradle.kts")
 
-fun isInAffectedGradleProjectFiles(project: Project, filePath: String): Boolean {
-    // fast path
-    if (!filePath.contains("gradle")) return false
-
-    val affectedFiles = getAffectedGradleProjectFiles(project)
-    return isInAffectedGradleProjectFiles(affectedFiles, filePath)
-}
-
-fun isInAffectedGradleProjectFiles(files: Set<String>, filePath: String): Boolean {
+fun isInAffectedGradleProjectFiles(filePath: String): Boolean {
     if (ApplicationManager.getApplication().isUnitTestModeWithoutAffectedGradleProjectFilesCheck) {
         return true
     }
 
-    return filePath in files
-}
+    // fast path
+    if (filePath.endsWith(".gradle")) return true
+    if (filePath.endsWith(".gradle.kts")) return true
+    if (filePath.endsWith("/gradle.properties")) return true
+    if (filePath.endsWith("/gradle-wrapper.properties")) return true
 
-fun getAffectedGradleProjectFiles(project: Project): Set<String> {
-    val gradleSettings = ExternalSystemApiUtil.getSettings(project, GradleConstants.SYSTEM_ID)
-    if (gradleSettings.getLinkedProjectsSettings().isEmpty()) return setOf()
-
-    val projectSettings = gradleSettings.getLinkedProjectsSettings().filterIsInstance<GradleProjectSettings>().firstOrNull()
-        ?: return setOf()
-
-    return ExternalSystemApiUtil.getAllManagers()
-        .filterIsInstance<GradleManager>()
-        .firstOrNull()
-        ?.getAffectedExternalProjectFiles(projectSettings.externalProjectPath, project)
-        ?.mapTo(mutableSetOf()) { it.toPath().systemIndependentPath }
-        ?: setOf()
+    return false
 }
 
 fun getGradleScriptInputsStamp(
