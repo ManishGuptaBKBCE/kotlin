@@ -105,7 +105,7 @@ class KotlinBuildProperties(
 
     val buildCachePassword: String? = get("kotlin.build.cache.password") as String?
 
-    val kotlinBootstrapVersion: String? = getLocalOrRoot("bootstrap.kotlin.version") as String?
+    val kotlinBootstrapVersion: String? = getLocalOrRoot("bootstrap.kotlin.default.version") as String?
 
     val defaultSnapshotVersion: String? = getLocalOrRoot("defaultSnapshotVersion") as String?
 }

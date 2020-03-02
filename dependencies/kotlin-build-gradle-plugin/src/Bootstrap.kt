@@ -22,8 +22,8 @@ val Project.internalKotlinRepo: String?
             "branch:default:any/artifacts/content/internal/repo"
 
 fun Project.kotlinBootstrapFrom(defaultSource: BootstrapOption) {
-    val customVersion = findProperty("bootstrap.custom.kotlin.version") as String?
-    val customRepo = findProperty("bootstrap.custom.kotlin.repo") as String?
+    val customVersion = findProperty("bootstrap.kotlin.version") as String?
+    val customRepo = findProperty("bootstrap.kotlin.repo") as String?
     val teamCityVersion = findProperty("bootstrap.teamcity.kotlin.version") as String?
     val teamCityBuild = findProperty("bootstrap.teamcity.build.number") as String?
     val teamCityProject = findProperty("bootstrap.teamcity.project") as String?

@@ -22,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:0.0.13")
+        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:0.0.14")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-sam-with-receiver:${project.bootstrapKotlinVersion}")
     }
@@ -91,7 +91,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib", embeddedKotlinVersion))
-    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:0.0.13")
+    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:0.0.14")
 
     implementation("net.rubygrapefruit:native-platform:${property("versions.native-platform")}")
     implementation("net.rubygrapefruit:native-platform-windows-amd64:${property("versions.native-platform")}")
